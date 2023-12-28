@@ -1,0 +1,460 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# # PANDAS
+
+# ## Introduction
+
+# Pandas is a popular library in Python that makes working with data a lot easier. It provides data structures and functions to efficiently analyze, manipulate, and visualize data.
+# 
+# One of the key data structures in pandas is the DataFrame, which is like a table with rows and columns. You can think of it as a spreadsheet or a database table. Pandas allows you to load data from various sources, such as CSV files, excel file, web files or databases, into a DataFrame.
+# 
+# Once you have your data in a DataFrame, pandas offers a wide range of functions to perform operations like filtering, sorting, grouping, aggregating, and transforming the data. You can also apply mathematical operations and statistical calculations to the data.
+# 
+# Pandas also has built-in visualization capabilities, allowing you to create plots and charts to better understand your data.
+# 
+# Overall, pandas is a powerful tool for data analysis and manipulation in Python. It's widely used in various fields such as data science, finance, and research.
+# 
+# In other for us to use pandas in our Jupyter notebook, we have to import pandas.
+
+# In[3]:
+
+
+# importing pandas as an alias
+import pandas as pd
+
+
+# In[4]:
+
+
+# in other to import a dataset with pandas, we copy the file path, then paste it here
+file = r"C:\Users\DELL\Downloads\Student Mental health.csv"  
+
+
+# In[5]:
+
+
+# then we read the dataframe
+stu = pd.read_csv(file)
+stu
+
+
+# Data scientists use pandas extensively in their work because it provides a wide range of functionalities that make data analysis and manipulation more efficient. Here are some ways data scientists use pandas:
+# 
+# 1. Data Cleaning and Preprocessing: Before analyzing data, data scientists often need to clean and preprocess it. Pandas provides functions to handle missing data, remove duplicates, and perform data transformations. This helps ensure the data is in a suitable format for analysis. As it has always been said (by Mr Gideon), Data Scientists spend most of their time cleaning Data.
+# 
+# 2. Data Exploration: Pandas allows data scientists to explore and understand the structure and characteristics of the data. They can use functions like `head()`, `tail()`, and `describe()` to get a quick overview of the data, examine summary statistics, and identify potential issues.
+# 
+# 3. Data Filtering and Selection: Data scientists can use pandas to filter and select specific subsets of data based on criteria. They can use boolean indexing, column selection, and row filtering techniques to extract relevant portions of the data for further analysis.
+# 
+# 4. Data Aggregation and Grouping: Pandas provides powerful functions to aggregate and group data. Data scientists can perform operations like grouping data by categories, calculating group-wise statistics, and applying custom functions to specific groups.
+# 
+# 5. Data Visualization: With pandas, data scientists can create visualizations to gain insights and communicate findings effectively. They can use the built-in plotting functions or integrate pandas with other visualization libraries like Matplotlib and Seaborn.
+# 
+# 6. Data Integration: Data scientists often work with data from multiple sources. Pandas allows them to merge, join, and concatenate datasets, enabling them to combine data from different files or databases into a single DataFrame.
+# 
+# These are just a few examples of how data scientists use pandas. It's a versatile library that helps streamline the data analysis process and enables them to derive meaningful insights from complex datasets.
+
+# ### DATA EXPLORATION
+
+# Data exploration is an important step in the data analysis process. It involves examining and understanding the structure, patterns, and characteristics of a dataset. By exploring the data, you can gain insights and make informed decisions about how to analyze and interpret it.
+# 
+# During data exploration, you can perform various tasks, such as:
+# 
+# 1. Descriptive statistics: Calculating summary statistics like mean, median, and standard deviation to understand the central tendency and variability of the data.
+# 
+# 2. Data visualization: Creating charts, graphs, and plots to visually represent the data and identify patterns, trends, and relationships.
+# 
+# 3. Data profiling: Examining the distribution of variables, identifying missing values, outliers, and potential data quality issues.
+# 
+# By exploring the data, you can gain a deeper understanding of its characteristics, identify potential issues, and make informed decisions about how to proceed with data analysis.
+
+# In[207]:
+
+
+# lets see the top(n) rows of our Dataframe
+stu.head()
+
+
+# In[208]:
+
+
+# lets check how many rows and columns our dataframe have
+stu.shape
+
+
+# In[209]:
+
+
+# lets check for the information on our DataFrame
+stu.info()
+
+
+# In[210]:
+
+
+# since the age column is the only column that with a float data type, its only going to return the age column
+stu.describe()
+
+
+# ### DATA CLEANING
+
+# Data cleaning, also known as data cleansing or data scrubbing, is the process of identifying and correcting or removing errors, inconsistencies, and inaccuracies in datasets. It involves several steps to ensure that the data is accurate, complete, and reliable for analysis.
+# 
+# During data cleaning, various techniques are employed to address common issues such as missing values, duplicate entries, incorrect formatting, outliers, and inconsistencies. These techniques may include:
+# 
+# 1. Handling missing data: Strategies like imputation or deletion are used to address missing values in the dataset.
+# 
+# 2. Removing duplicates: Duplicate records are identified and eliminated to avoid redundancy and ensure data integrity.
+# 
+# 3. Standardizing formats: Inconsistent data formats, such as date formats or categorical variables, are standardized to maintain consistency across the dataset.
+# 
+# 4. Handling outliers: Outliers are extreme values that deviate significantly from the rest of the data. They are identified and either corrected or removed, depending on the context.
+# 
+# 5. Resolving inconsistencies: Inconsistent or conflicting data entries are resolved by applying logical rules or referring to external sources of information.
+# 
+# By performing data cleaning, analysts and data scientists can improve the quality and reliability of the data, leading to more accurate and meaningful insights during analysis.
+
+# In[211]:
+
+
+# lets check if our dataframe has missing values in them
+stu.isnull().sum()
+#from the output, we can see that the age column has one missing values
+
+
+# In[212]:
+
+
+# From the above cell, we found out that the column age has a missing value. So we either fill or we drop the row
+# we then decided to fill
+# Filling the missing data with the mean of age
+stu = stu.fillna(value= stu['Age'].mean())
+stu.head()
+
+
+# In[213]:
+
+
+# now we check if we still have a missing value
+stu.isnull().sum()
+# from the output, we see that we have dealt with all missing value
+
+
+# In[214]:
+
+
+# We found out that we didn't need the 'Timestamp' column, so we delete it
+# Take out the timestamp column
+stu.drop(columns='Timestamp', inplace=True)
+stu.head()
+
+
+# In[215]:
+
+
+# the 'Course of study' columns has some mis spelt word and abbreviations, making that column dirty.
+# so we rename some/most of those words
+stu['What is your course?'] = stu['What is your course?'].replace({'Islamic education': 'Islamic Education',
+                                                                             'KIRKHS': 'Kirkhs',
+                                                                             'KOE': 'Koe',
+                                                                             'Laws': 'Law',
+                                                                             'Pendidikan Islam' : 'Pendidikan Islam',
+                                                                             'Pendidikan islam' : 'Pendidikan Islam',
+                                                                             'engin' : 'Engineering',
+                                                                             'koe' : 'Koe',
+                                                                             'Kop' : 'Koe',
+                                                                             'psychology' : 'Psychology',
+                                                                             'Benl' : 'BENL',
+                                                                             'Fiqh' : 'Fiqh fatwa',
+                                                                             'Econs':'Economics',
+                                                                             'Engine':'Engineering'})
+
+
+# In[216]:
+
+
+# We noticed that the column names where too long and hard to understand, so we renamed it to something much simplier
+# Renaming columns
+stu.rename(columns = {'Choose your gender':'Gender',
+                           'What is your course?':'Course',
+                           'Your current year of Study':'Year of study',
+                           'What is your CGPA?':'CGPA',
+                           'Do you have Depression?':'Depression',
+                           'Do you have Anxiety?':'Anxiety',
+                           'Do you have Panic attack?':'Panic Attack',
+                           'Did you seek any specialist for a treatment?':'Treatment'}, inplace = True)
+stu.head()
+
+
+# In[217]:
+
+
+# notice that the first letter in the 'Year or study' column has both uppercase and lowercase. So we make them uniformed
+# Capitalize the First letter of the 'Your current year of Study' column
+stu['Year of study'] = stu['Year of study'].str.capitalize()
+stu.head()
+
+
+# In[218]:
+
+
+# Now we change the datatype for the Age column fro a float to an integer
+
+# Convert the age column to a float
+stu['Age'] = stu['Age'].astype(int)
+stu.head()
+
+# the result below shows that the datatype for age column has been changed to an integer
+
+
+# ### Data Aggregation and grouping
+
+# Data aggregation involves combining multiple data points into a single value. For example, you can calculate the average, sum, count, minimum, or maximum of a numeric column within a group. Some of these would also be found in a `.describe` method This allows you to understand the overall characteristics of the data within each group.
+# 
+# Grouping on the other hand, involves dividing the data into groups based on a particular column or set of columns. This allows you to analyze and compare subsets of your data separately. You can then apply aggregation functions to each group to gain insights into the patterns or trends within those groups.
+# 
+# Data aggregation and grouping can uncover valuable information and make data-driven decisions. It's a powerful tool in data science that helps you understand your data at a more understanding level.
+# 
+# To better understand this, we draft out questions to work with our dataframe
+
+# QUESTION 1
+# 
+# 1. Gender:
+# - What is the distribution of genders among the students?
+# - Are there any gender differences in the prevalence of mental health issues?
+
+# In[219]:
+
+
+# Lets first call out our data to know wat we are working with
+stu.head(10)
+
+
+# In[220]:
+
+
+#Gender:
+#What is the distribution of genders among the students?
+groupby_stu_1 = stu.groupby('Gender')['Gender']
+groupby_stu_1.count()
+
+
+# In[221]:
+
+
+# Are there any gender differences in the prevalence of mental health issues?
+# While working with this question, we found out that Depression and Anxiety can cause mental health issues
+groupby_stu_2a = stu.groupby(['Gender', 'Depression'])['Depression'].count()
+groupby_stu_2b = stu.groupby(['Gender', 'Anxiety'])['Anxiety'].count()
+
+print(groupby_stu_2a)
+print(groupby_stu_2b)
+
+
+# QUESTION 2
+# 
+# 2. Age:
+# - What is the age range of the students?
+# - Is there any correlation between age and mental health issues?
+
+# In[6]:
+
+
+#Age:
+# to answer question 2a, we need an age range column, so we add that column to our dataframe
+# Initialize an empty list to store the age ranges
+age_ranges = []
+
+# Iterate through the rows in the DataFrame 'stu'
+for index, rows in stu.iterrows():
+    # Extract the value in the 'Age' column for the current row
+    age = rows['Age']
+
+    # Categorize the Age Range
+    if age < 18:
+        age_range = 'Underage'
+    elif age >= 18 and age < 23:
+        age_range = 'Required Age'
+    else:
+        age_range = 'Overage'
+    
+    # Append the determined age_range to the 'age_ranges' list
+    age_ranges.append(age_range)
+
+# Add a new column called 'Age Range' to the DataFrame 'stu' and assign the age_ranges to it
+stu['Age Range'] = age_ranges
+
+
+# In[7]:
+
+
+# lets check if the column was added
+stu.head()
+
+
+# In[8]:
+
+
+# then to answer question 2a, we call out the age column and the age range column to compare
+stu[['Age','Age Range']].head()
+
+
+# In[225]:
+
+
+# Is there any correlation between age and mental health issues?
+# Remember in question 1, we did something similar like this but a different approach
+# What this means is that there are different approach to one thing. You just have to find the the one that is comfortable
+stu.groupby(['Age', 'Depression'])['Depression'].count(), stu.groupby(['Age', 'Anxiety'])['Anxiety'].count()
+#print(stu.groupby(['Age', 'Depression'])['Depression'].count())
+#print(stu.groupby(['Age', 'Anxiety'])['Anxiety'].count())
+
+
+# Question 3
+# - What course are the students enrolled in?
+# - Are there any difference in mental health issues based on the course of study?
+
+# In[226]:
+
+
+# What course are the students enrolled in?
+stu.groupby('Course')['Course'].count()
+
+
+# In[227]:
+
+
+stu.groupby(['Course'])['Depression'].count()
+
+
+# In[228]:
+
+
+# Are there any difference in mental health issues based on the course of study?
+stu.groupby(['Course'])['Depression'].value_counts(normalize=True) * 100, stu.groupby(['Course'])['Anxiety'].value_counts(normalize=True) * 100
+
+
+# Question 4
+# - What is the distribution of students across different years of study?
+
+# In[229]:
+
+
+#What is the distribution of students across different years of study?
+stu.groupby('Year of study')['Year of study'].count()
+
+
+# Question 5
+# - What is the prevalence of depression, anxiety and panic attacks among the students?
+
+# In[230]:
+
+
+x = stu.groupby(['Gender', 'Depression'])[['Depression']].count()
+y = stu.groupby(['Gender', 'Anxiety'])[['Anxiety']].count()
+z = stu.groupby(['Gender', 'Panic Attack'])[['Panic Attack']].count()
+
+print(x)
+print(y)
+print(z)
+
+
+# Question 6
+# 
+# - How many students sought specialist treatment for their mental health issues?
+# - Is there any relationship between seeking treatment and the severity of mental health issue
+
+# In[231]:
+
+
+# How many students sought specialist treatment for their mental health issues?
+groupby_stu_3 = stu.groupby(['Gender', 'Treatment']).agg({'Treatment': 'count'})
+groupby_stu_3
+
+
+# In[232]:
+
+
+# How many students sought specialist treatment for their mental health issues?
+# like I said earlier, different ways to archeive one thing
+[stu[stu.Treatment == 'No']['Treatment'].count(),
+stu[stu.Treatment == 'Yes']['Treatment'].count()]
+
+
+# In[233]:
+
+
+# How many students sought specialist treatment for their mental health issues?
+# yet, another way
+stu.groupby('Treatment')['Treatment'].count()
+
+
+# ### Data Visualization
+
+# Data visualization is a powerful way to present data in a visual format, making it easier to understand and interpret complex information. It involves creating visual representations such as charts, graphs, maps, and diagrams to communicate patterns, trends, and relationships within the data.
+# 
+# There are various types of data visualizations, including:
+# 
+# 1. Bar charts: Used to compare categorical data or display frequencies.
+# 
+# 2. Line charts: Show trends and changes over time.
+# 
+# 3. Pie charts: Represent proportions or percentages of a whole.
+# 
+# 4. Scatter plots: Display the relationship between two continuous variables.
+# 
+# 5. Heatmaps: Visualize data using colors to represent values in a matrix or table.
+# 
+# 6. Maps: Illustrate geographic data and spatial patterns.
+# 
+# When creating data visualizations, it's important to choose the right type of visualization that best represents the data and the insights you want to convey. Additionally, consider using appropriate colors, labels, and titles to enhance the clarity and understanding of the visualizations.
+# 
+# Tools like Tableau, Power BI, and Python libraries like Matplotlib and Seaborn can help you create stunning and interactive data visualizations.
+# 
+# For the sake of this project, and the topic we are working on, we would be using Pandas to visualize. It is important to note that Pandas offers some basic plotting functionalities to help us with that. With pandas, you can create various plots like line plots, bar plots, scatter plots, histograms, box plots, and area plots. These plots allow you to explore and understand your data visually, making it easier to identify patterns, trends, and relationships.
+
+# In[234]:
+
+
+# How many students sought specialist treatment for their mental health issues?
+# We would be visualizing this question in variuos types of data visualization
+
+# Pie chat
+[stu.groupby('Treatment')['Treatment'].count(),
+stu.groupby('Treatment')['Treatment'].count().plot(x='Yes', y='No', kind = 'pie')]
+
+
+# In[235]:
+
+
+[stu.groupby('Treatment')['Treatment'].count(),
+stu.groupby('Treatment')['Treatment'].count().plot(x='Yes', y='No', kind = 'line')]
+
+
+# In[236]:
+
+
+[stu.groupby('Treatment')['Treatment'].count(),
+stu.groupby('Treatment')['Treatment'].count().plot(x='Yes', y='No', kind = 'hist')]
+
+
+# In[237]:
+
+
+[stu.groupby('Treatment')['Treatment'].count(),
+stu.groupby('Treatment')['Treatment'].count().plot(x='Yes', y='No', kind = 'bar')]
+
+
+# #### Reference
+
+# 1. [Dataset](https://www.kaggle.com/datasets/shariful07/student-mental-health/data)
+# 2. [Documentation](https://pandas.pydata.org/docs/)
+# 3. [Additional Source 1](https://www.google.com/search?q=how+to+drop+a+column+in+pandas&sca_esv=591697910&sxsrf=AM9HkKlZebooCOTLgcK0K2azFh2NmGDOJw%3A1702836886842&ei=ljp_ZduHM66xhbIP3IG94AQ&oq=how+to+drop+a+column&gs_lp=Egxnd3Mtd2l6LXNlcnAiFGhvdyB0byBkcm9wIGEgY29sdW1uKgIIADIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzIKEAAYRxjWBBiwAzINEAAYgAQYigUYQxiwAzINEAAYgAQYigUYQxiwA0jvC1AAWABwAXgBkAEAmAEAoAEAqgEAuAEByAEA4gMEGAAgQYgGAZAGCg&sclient=gws-wiz-serp)
+# 4. [Additional Source 2](https://en.wikipedia.org/wiki/Special:Search?go=Go&search=pandas+in+python&ns0=1)
+
+# In[ ]:
+
+
+
+
